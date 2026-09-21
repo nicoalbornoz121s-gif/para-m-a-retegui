@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Mía 💛</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #332800, #090806 70%);
+    font-family: Georgia, serif;
+    color: #ffd84d;
+}
+
+#inicio {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    z-index: 100;
+    background: radial-gradient(circle, #302600, #090806);
+    transition: opacity 1.5s ease;
+}
+
+#inicio h1 {
+    font-size: 32px;
+    margin: 0;
+    animation: latido 1.5s infinite;
+}
+
+#inicio p {
+    font-size: 18px;
+    opacity: .8;
+}
+
+@keyframes latido {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+#escena {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Corazón */
+#corazon {
+    position: absolute;
+    width: 360px;
+    height: 330px;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+}
+
+.flor {
+    position: absolute;
+    font-size: 28px;
+    opacity: 0;
+    transform: scale(0);
+    transition:
+        left 1.5s ease,
+        top 1.5s ease,
+        opacity .8s ease,
+        transform 1.5s ease;
+    filter: drop-shadow(0 0 8px #ffd21c);
+}
+
+.flor.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.flor.brilla {
+    animation: brillo 2s infinite ease-in-out;
+}
+
+@keyframes brillo {
+    0%, 100% {
+        filter: drop-shadow(0 0 4px #ffd21c);
+    }
+    50% {
+        filter: drop-shadow(0 0 18px #fff176);
+    }
+}
+
+/* Pétalos */
+.petalo {
+    position: fixed;
+    top: -30px;
+    font-size: 20px;
+    pointer-events: none;
+    animation: caer linear forwards;
+}
+
+@keyframes caer {
+    0% {
+        transform: translateY(-30px) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Mensaje */
+#mensaje {
+    position: absolute;
+    left: 50%;
+    top: 78%;
+    transform: translate(-50%, 30px);
+    width: 90%;
+    max-width: 550px;
+    text-align: center;
+    opacity: 0;
+    transition: all 2s ease;
+    text-shadow: 0 0 12px #ffcf33;
+}
+
+#mensaje.mostrar {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+#mensaje .principal {
+    font-size: 25px;
+    line-height: 1.5;
+}
+
+#mensaje .firma {
+    margin-top: 15px;
+    font-size: 18px;
+}
+
+.corazon-pequeno {
+    font-size: 25px;
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+
+    #inicio h1 {
+        font-size: 27px;
+    }
+
+    #corazon {
+        width: 300px;
+        height: 280px;
+        top: 40%;
+    }
+
+    .flor {
+        font-size: 23px;
+    }
+
+    #mensaje {
+        top: 72%;
+    }
+
+    #mensaje .principal {
+        font-size: 20px;
+    }
+
+    #mensaje .firma {
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Pantalla inicial -->
+<div id="inicio" onclick="comenzar()">
+    <h1>Tocá la pantalla 💛</h1>
+    <p>Tengo algo para vos...</p>
+</div>
+
+<!-- Escena -->
+<div id="escena">
+
+    <div id="corazon"></div>
+
+    <div id="mensaje">
+        <div class="principal">
+            Te amo un montón, mi princesa hermosa. 💛<br>
+            Es poco, pero lo hago con todo el corazón.
+        </div>
+
+        <div class="firma">
+            Para Mía Rete​gui 🌻<br>
+            de Nico Albornoz
+        </div>
+
+        <div class="corazon-pequeno">
+            ♡
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+/* Puntos que forman el corazón */
+const puntos = [
+    [50,8],
+    [38,12],
+    [27,20],
+    [20,32],
+    [18,45],
+    [23,58],
+    [32,70],
+    [42,80],
+    [50,90],
+    [58,80],
+    [68,70],
+    [77,58],
+    [82,45],
+    [80,32],
+    [73,20],
+    [62,12],
+
+    [40,20],
+    [32,30],
+    [27,42],
+    [32,52],
+    [40,62],
+    [50,73],
+    [60,62],
+    [68,52],
+    [73,42],
+    [68,30],
+    [60,20],
+
+    [44,35],
+    [38,43],
+    [43,52],
+    [50,62],
+    [57,52],
+    [62,43],
+    [56,35],
+    [50,42]
+];
+
+/* Crear flores */
+const contenedor = document.getElementById("corazon");
+
+puntos.forEach((punto, i) => {
+
+    const flor = document.createElement("div");
+
+    flor.className = "flor";
+    flor.innerHTML = "🌻";
+
+    flor.style.left = punto[0] + "%";
+    flor.style.top = punto[1] + "%";
+
+    flor.style.transitionDelay = (i * 0.07) + "s";
+
+    contenedor.appendChild(flor);
+});
+
+
+function comenzar() {
+
+    const inicio = document.getElementById("inicio");
+
+    inicio.style.opacity = "0";
+
+    setTimeout(() => {
+        inicio.style.display = "none";
+    }, 1500);
+
+    /* Mostrar flores */
+    const flores = document.querySelectorAll(".flor");
+
+    flores.forEach((flor, i) => {
+
+        setTimeout(() => {
+
+            flor.classList.add("visible");
+
+            if (i % 3 === 0) {
+                flor.classList.add("brilla");
+            }
+
+        }, i * 80);
+
+    });
+
+    /* Pétalos */
+    iniciarPetalos();
+
+    /* Mostrar mensaje */
+    setTimeout(() => {
+
+        document.getElementById("mensaje")
+            .classList.add("mostrar");
+
+    }, 4000);
+}
+
+
+/* Crear pétalos que caen */
+function iniciarPetalos() {
+
+    setInterval(() => {
+
+        const petalo = document.createElement("div");
+
+        petalo.className = "petalo";
+        petalo.innerHTML = Math.random() > .5 ? "🌻" : "💛";
+
+        petalo.style.left =
+            Math.random() * 100 + "vw";
+
+        petalo.style.animationDuration =
+            (4 + Math.random() * 5) + "s";
+
+        petalo.style.fontSize =
+            (12 + Math.random() * 15) + "px";
+
+        document.body.appendChild(petalo);
+
+        setTimeout(() => {
+            petalo.remove();
+        }, 9000);
+
+    }, 350);
+}
+
+</script>
+
+</body>
+</html>
